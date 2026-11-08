@@ -1,0 +1,37 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<header class="site-header">
+  <div class="header-inner container">
+    <a class="brand" href={base} aria-label="বিজ্ঞানপত্র হোম">
+      <span class="brand-symbol">ব<span>·</span></span>
+      <span class="brand-text">বিজ্ঞানপত্র <small>BIGGANPOTRO</small></span>
+    </a>
+    <nav class="nav" id="main-nav" aria-label="প্রধান নেভিগেশন">
+      <a href={base}>প্রচ্ছদ</a>
+      <a href={`${base}articles/`}>প্রবন্ধ</a>
+      <a href={`${base}articles/?category=পদার্থবিজ্ঞান`}>পদার্থবিজ্ঞান</a>
+      <a href={`${base}articles/?category=কৃত্রিম%20বুদ্ধিমত্তা`}>প্রযুক্তি</a>
+      <a href={`${base}about/`}>লেখক পরিচিতি</a>
+    </nav>
+    <div class="header-controls">
+      <button type="button" class="icon-button" id="theme-toggle" aria-label="ডার্ক মোড পরিবর্তন" title="থিম পরিবর্তন">◐</button>
+      <button type="button" class="icon-button menu-toggle" id="menu-toggle" aria-label="মেনু খুলুন" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+<script>
+  const themeButton = document.getElementById('theme-toggle');
+  const stored = localStorage.getItem('bigganpotro-theme');
+  if (stored === 'dark') document.documentElement.dataset.theme = 'dark';
+  themeButton?.addEventListener('click', () => {
+    const dark = document.documentElement.dataset.theme !== 'dark';
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    localStorage.setItem('bigganpotro-theme', dark ? 'dark' : 'light');
+  });
+  const menuButton = document.getElementById('menu-toggle');
+  menuButton?.addEventListener('click', () => {
+    const opened = document.getElementById('main-nav')?.classList.toggle('nav-open') ?? false;
+    menuButton.setAttribute('aria-expanded', String(opened));
+  });
+</script>

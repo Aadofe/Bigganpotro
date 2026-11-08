@@ -1,0 +1,11 @@
+---
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div><a href={base} class="footer-brand">বিজ্ঞানপত্র</a><p>বিজ্ঞানের গভীরে, মাতৃভাষার আলোয়।</p></div>
+    <div class="footer-links"><a href={`${base}articles/`}>সব প্রবন্ধ</a><a href={`${base}about/`}>লেখক</a><a href="https://github.com/Rakat-3/Bigganpotro" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+    <div class="copyright">© {year} বিজ্ঞানপত্র · জ্ঞান সবার জন্য</div>
+  </div>
+</footer>

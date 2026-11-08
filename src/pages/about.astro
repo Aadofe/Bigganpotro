@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base=import.meta.env.BASE_URL;
+---
+<BaseLayout title="লেখক ও পরিচিতি — বিজ্ঞানপত্র" description="বিজ্ঞানপত্র ও এর লেখক সম্পর্কে জানুন">
+  <section class="page-intro container"><span class="section-label">ABOUT THE AUTHOR / লেখক পরিচিতি</span><h1>বিজ্ঞান, ভাষা ও কৌতূহল।</h1><p>জটিল বিষয়কে সহজভাবে বোঝার এবং বোঝানোর একটি স্বাধীন উদ্যোগ।</p></section>
+  <section class="container author-panel"><div class="author-portrait"><span>ব</span><small>YOUR PHOTO HERE</small></div><div class="author-content"><span class="eyebrow">লেখক ও প্রতিষ্ঠাতা</span><h2>আপনার নাম</h2><p class="author-role">বিজ্ঞান ও প্রযুক্তিবিষয়ক লেখক</p><p>এখানে নিজের সংক্ষিপ্ত পরিচিতি লিখুন। আপনার শিক্ষাগত পটভূমি, গবেষণার আগ্রহ এবং কেন বাংলায় বিজ্ঞান নিয়ে লিখছেন তা উল্লেখ করতে পারেন।</p><p>বিজ্ঞানপত্রের উদ্দেশ্য হলো বাংলা ভাষায় নির্ভুল তথ্য, প্রাসঙ্গিক গবেষণা এবং পরিষ্কার চিত্রসহ বৈজ্ঞানিক প্রবন্ধ প্রকাশ করা।</p><div class="author-social"><a href="https://github.com/Rakat-3" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`${base}articles/`}>আমার প্রবন্ধ ↗</a></div></div></section>
+  <section class="container values-section"><div><span class="section-label">EDITORIAL PRINCIPLES</span><h2>আমাদের সম্পাদকীয় নীতি</h2></div><div class="values-grid"><div><b>01</b><h3>তথ্যের নির্ভুলতা</h3><p>প্রাসঙ্গিক বৈজ্ঞানিক উৎস এবং যাচাইযোগ্য তথ্যের ভিত্তিতে লেখা।</p></div><div><b>02</b><h3>সহজ ব্যাখ্যা</h3><p>জটিল ধারণা উদাহরণ, চিত্র এবং প্রয়োজনীয় সমীকরণে উপস্থাপন।</p></div><div><b>03</b><h3>উন্মুক্ত পাঠ</h3><p>বাংলাভাষী পাঠকের জন্য সহজলভ্য বিজ্ঞানচর্চা।</p></div></div></section>
+</BaseLayout>

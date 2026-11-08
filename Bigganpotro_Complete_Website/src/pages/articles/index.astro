@@ -1,0 +1,45 @@
+---
+import {getCollection} from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+const posts = (await getCollection('blog')).sort((a,b)=>b.data.pubDate.getTime()-a.data.pubDate.getTime());
+const categories = ['সব বিভাগ', ...new Set(posts.map(p=>p.data.category))];
+---
+<BaseLayout title="সমস্ত প্রবন্ধ — বিজ্ঞানপত্র" description="বিজ্ঞানপত্রের প্রকাশিত বাংলা বৈজ্ঞানিক প্রবন্ধসমূহ">
+  <section class="page-intro container"><span class="section-label">THE JOURNAL / গবেষণা ও জ্ঞান</span><h1>প্রবন্ধসমূহ</h1><p>বিজ্ঞান ও প্রযুক্তির নানা বিষয়ের বিস্তারিত বাংলা আলোচনা।</p></section>
+  <section class="container listing-section">
+    <div class="filterbar"><label class="search-wrap"><span>⌕</span><input id="article-search" type="search" placeholder="প্রবন্ধ খুঁজুন..." aria-label="প্রবন্ধ খুঁজুন" /></label><div class="filter-buttons">{categories.map((c,i)=><button type="button" class:list={['filter-button',{'active':i===0}]} data-category={i===0?'all':c}>{c}</button>)}</div></div>
+    <p id="results-count" class="results-count">{posts.length.toLocaleString('bn-BD')}টি প্রবন্ধ</p>
+    <div class="article-grid" id="article-list">{posts.map(post=><div class="search-item" data-category={post.data.category} data-search={`${post.data.title} ${post.data.description} ${post.data.category} ${post.data.tags.join(' ')}`.toLowerCase()}><ArticleCard post={post}/></div>)}</div>
+    <p id="no-results" class="no-results" hidden>এই অনুসন্ধানে কোনো প্রবন্ধ পাওয়া যায়নি।</p>
+  </section>
+</BaseLayout>
+<script>
+  const input = document.querySelector<HTMLInputElement>('#article-search');
+  const cards = [...document.querySelectorAll<HTMLElement>('.search-item')];
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.filter-button')];
+  const params = new URLSearchParams(window.location.search);
+  let category = params.get('category') || 'all';
+  if (!buttons.some(b=>b.dataset.category===category)) category='all';
+  const update = () => {
+    const query = (input?.value||'').trim().toLowerCase();
+    let visible=0;
+    cards.forEach(card=>{
+      const show=(category==='all'||card.dataset.category===category) && (card.dataset.search||'').includes(query);
+      card.hidden = !show;
+      if(show) visible++;
+    });
+    buttons.forEach(b=>b.classList.toggle('active',b.dataset.category===category));
+    const count=document.getElementById('results-count'); if(count) count.textContent=`${visible.toLocaleString('bn-BD')}টি প্রবন্ধ`;
+    const noResults=document.getElementById('no-results'); if(noResults) noResults.hidden=visible>0;
+  };
+  buttons.forEach(b=>b.addEventListener('click',()=>{
+    category=b.dataset.category||'all';
+    const url=new URL(window.location.href);
+    if(category==='all')url.searchParams.delete('category');else url.searchParams.set('category',category);
+    history.replaceState({},'',url);
+    update();
+  }));
+  input?.addEventListener('input',update);
+  update();
+</script>

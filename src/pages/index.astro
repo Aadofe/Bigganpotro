@@ -1,11 +1,45 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import {getCollection} from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+const base = import.meta.env.BASE_URL;
+const posts = (await getCollection('blog')).sort((a,b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const featured = posts.find(p=>p.data.featured) ?? posts[0];
+const others = posts.filter(p=>p.id !== featured?.id).slice(0,6);
+const categories = [
+  ['পদার্থবিজ্ঞান','Physics','⚛'],['মহাকাশবিজ্ঞান','Astronomy','✦'],['কৃত্রিম বুদ্ধিমত্তা','Artificial Intelligence','⌘'],['গণিত','Mathematics','∑'],['জীববিজ্ঞান','Biology','◎']
+];
 ---
-
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout>
+  <section class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="hero-kicker"><span class="green-spark"></span> বাংলা বিজ্ঞানচর্চার নতুন পরিসর</div>
+        <h1>জানার সীমা ছাড়িয়ে<br/><em>বিজ্ঞানের গভীরে।</em></h1>
+        <p>মহাবিশ্ব থেকে কৃত্রিম বুদ্ধিমত্তা — জটিল বৈজ্ঞানিক ধারণার নির্ভরযোগ্য, গভীর ও সহজবোধ্য ব্যাখ্যা। সম্পূর্ণ বাংলায়।</p>
+        <div class="hero-actions"><a class="button-primary" href={`${base}articles/`}>প্রবন্ধ অন্বেষণ করুন <span>↗</span></a><a class="button-text" href={`${base}about/`}>আমাদের সম্পর্কে <span>→</span></a></div>
+        <div class="hero-meta"><span><strong>{posts.length.toLocaleString('bn-BD')}</strong> প্রকাশিত প্রবন্ধ</span><i></i><span><strong>৫</strong> বিজ্ঞান বিভাগ</span><i></i><span>উন্মুক্ত জ্ঞান</span></div>
+      </div>
+      <div class="hero-visual" aria-label="মহাকাশ এবং বৈজ্ঞানিক কক্ষপথের আলংকারিক নকশা">
+        <div class="visual-grid"></div><div class="planet planet-one"></div><div class="planet planet-two"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+        <div class="center-star"></div><div class="visual-dot dot-one"></div><div class="visual-dot dot-two"></div>
+        <div class="visual-caption"><span>01 / DISCOVERY</span><strong>UNIVERSE · MATTER · MIND</strong></div>
+      </div>
+    </div>
+  </section>
+  <section class="section container featured-section">
+    <div class="section-top"><div><span class="section-label">সম্পাদকের বাছাই</span><h2>বিশেষ প্রবন্ধ</h2></div><span class="section-index">01 / FEATURED</span></div>
+    {featured && <a class="featured-card" href={`${base}articles/${featured.id}/`}>
+      <div class="featured-art"><div class="featured-glow"></div><div class="cosmic-disc"></div><div class="cosmic-disc second"></div><div class="art-constellation">✧ &nbsp; ✦ &nbsp; · &nbsp; ✧</div></div>
+      <div class="featured-body"><span class="eyebrow">{featured.data.category} · সম্পাদকীয় নির্বাচন</span><h3>{featured.data.title}</h3><p>{featured.data.description}</p><span class="read-more">সম্পূর্ণ প্রবন্ধ পড়ুন ↗</span></div>
+    </a>}
+  </section>
+  <section class="section container"><div class="section-top"><div><span class="section-label">বিভাগসমূহ</span><h2>বিজ্ঞানের বিভিন্ন দিগন্ত</h2></div></div>
+    <div class="category-grid">{categories.map(([name,en,mark])=><a class="category-card" href={`${base}articles/?category=${encodeURIComponent(name)}`}><span class="category-mark">{mark}</span><strong>{name}</strong><small>{en}</small><span class="category-arrow">↗</span></a>)}</div>
+  </section>
+  <section class="section container recent-section"><div class="section-top"><div><span class="section-label">নতুন প্রকাশনা</span><h2>সাম্প্রতিক প্রবন্ধ</h2></div><a class="section-link" href={`${base}articles/`}>সব প্রবন্ধ দেখুন ↗</a></div>
+    <div class="article-grid">{others.map(post=><ArticleCard post={post} />)}</div>
+  </section>
+  <section class="container mission-strip"><div class="mission-icon">✳</div><div><span class="section-label">আমাদের লক্ষ্য</span><h2>বিজ্ঞান হোক সকলের ভাষায়</h2><p>সঠিক সূত্র, স্পষ্ট ব্যাখ্যা এবং সুন্দর চিত্রের মাধ্যমে বাংলাভাষী পাঠকের কাছে বিজ্ঞানকে আরও সহজলভ্য করে তোলা।</p></div><a href={`${base}about/`}>আরও জানুন ↗</a></section>
+</BaseLayout>

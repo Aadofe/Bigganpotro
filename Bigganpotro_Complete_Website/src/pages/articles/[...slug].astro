@@ -1,0 +1,26 @@
+---
+import {getCollection, render} from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+export async function getStaticPaths(){
+  const posts=await getCollection('blog');
+  return posts.map(post=>({params:{slug:post.id},props:{post}}));
+}
+const {post}=Astro.props;
+const {Content,headings}=await render(post);
+const allPosts=await getCollection('blog');
+const related=allPosts.filter(p=>p.id!==post.id && p.data.category===post.data.category).slice(0,2);
+const base=import.meta.env.BASE_URL;
+const date=post.data.pubDate.toLocaleDateString('bn-BD',{year:'numeric',month:'long',day:'numeric'});
+---
+<BaseLayout title={`${post.data.title} — বিজ্ঞানপত্র`} description={post.data.description}>
+  <div class="container article-heading"><div class="breadcrumbs"><a href={base}>প্রচ্ছদ</a><span>/</span><a href={`${base}articles/`}>প্রবন্ধ</a><span>/</span><span>{post.data.category}</span></div><span class="eyebrow">{post.data.category} · {post.data.readingTime ?? 6} মিনিটের পাঠ</span><h1>{post.data.title}</h1><p>{post.data.description}</p><div class="byline"><span class="byline-avatar">ব</span><div><strong>{post.data.author}</strong><span>প্রকাশিত: {date}{post.data.updatedDate ? ` · হালনাগাদ: ${post.data.updatedDate.toLocaleDateString('bn-BD')}` : ''}</span></div></div></div>
+  <div class="container article-page-grid"><article class="article-prose"><Content/><div class="article-end">— প্রবন্ধের সমাপ্তি —</div><a class="back-link" href={`${base}articles/`}>← সব প্রবন্ধে ফিরে যান</a></article>
+  <aside class="article-aside"><div class="toc"><span class="section-label">এই প্রবন্ধে</span><ol>{headings.filter(h=>h.depth===2).map(h=><li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></div><div class="aside-note"><span>✧</span><p>জ্ঞান ছড়িয়ে দিন। প্রবন্ধটি ভালো লাগলে বন্ধুদের সঙ্গে শেয়ার করুন।</p><button id="copy-link" type="button">লিংক কপি করুন ↗</button></div></aside></div>
+  {related.length>0 && <section class="container section related-section"><div class="section-top"><div><span class="section-label">আরও পড়ুন</span><h2>সম্পর্কিত প্রবন্ধ</h2></div></div><div class="article-grid">{related.map(p=><ArticleCard post={p}/>)}</div></section>}
+</BaseLayout>
+<script>
+  document.getElementById('copy-link')?.addEventListener('click',async(event)=>{
+    try{await navigator.clipboard.writeText(window.location.href);(event.currentTarget as HTMLButtonElement).textContent='লিংক কপি হয়েছে ✓';}catch{(event.currentTarget as HTMLButtonElement).textContent='ব্রাউজার থেকে URL কপি করুন';}
+  });
+</script>

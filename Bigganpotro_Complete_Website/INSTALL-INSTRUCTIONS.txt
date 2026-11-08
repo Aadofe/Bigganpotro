@@ -1,0 +1,17 @@
+BIGGANPOTRO WEBSITE - INSTRUCTIONS
+
+Copy all files and folders inside this ZIP into the EXISTING Astro root:
+C:\Users\Test\Documents\Bigganpotro
+Do not copy the outer bigganpotro_website directory.
+
+Run:
+npm install @tailwindcss/vite tailwindcss remark-math rehype-katex katex
+npm run dev
+
+Edit author: src/pages/about.astro
+New articles: src/content/blog/<category>/<article-name>.md
+Figures: place .svg/.png/.jpg next to the .md article
+Test production build: npm run build
+Publish: git add . && git commit -m "Update" && git push origin main
+
+GitHub username and repo must match astro.config.mjs, Footer.astro, about.astro and remote URL.

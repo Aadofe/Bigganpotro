@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { post: CollectionEntry<'blog'>; compact?: boolean; }
+const {post, compact=false} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const url = `${base}articles/${post.id}/`;
+const formattedDate = post.data.pubDate.toLocaleDateString('bn-BD', {year:'numeric',month:'long',day:'numeric'});
+const categoryClass = post.id.split('/')[0];
+---
+<a href={url} class:list={['article-card',{'article-card-compact':compact}]}>
+  <div class:list={['card-art',categoryClass]} aria-hidden="true">
+    <span class="art-orbit"></span><span class="art-core"></span><span class="art-dot"></span>
+    <span class="art-label">{categoryClass === 'ai' ? 'AI / ML' : categoryClass === 'physics' ? 'PHYSICS' : categoryClass === 'astronomy' ? 'COSMOS' : categoryClass.toUpperCase()}</span>
+  </div>
+  <div class="article-card-body">
+    <span class="eyebrow">{post.data.category} <span class="mid-dot">•</span> {formattedDate}</span>
+    <h3>{post.data.title}</h3>
+    <p>{post.data.description}</p>
+    <span class="read-more">প্রবন্ধ পড়ুন <span aria-hidden="true">↗</span></span>
+  </div>
+</a>
